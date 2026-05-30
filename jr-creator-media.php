@@ -41,6 +41,7 @@ function jr_creator_media_load()
     require_once JR_CREATOR_MEDIA_PATH . 'includes/assets.php';
     require_once JR_CREATOR_MEDIA_PATH . 'includes/metaboxes.php';
     require_once JR_CREATOR_MEDIA_PATH . 'includes/save-post.php';
+    require_once JR_CREATOR_MEDIA_PATH . 'includes/rest.php';
     require_once JR_CREATOR_MEDIA_PATH . 'includes/bootstrap.php';
 
     jr_creator_media_bootstrap();

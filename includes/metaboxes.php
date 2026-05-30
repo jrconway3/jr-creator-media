@@ -7,6 +7,15 @@ if (!defined('ABSPATH')) {
 function jr_creator_media_register_metaboxes()
 {
     add_meta_box(
+        'jr-creator-media-video-youtube',
+        __('YouTube Info', 'jr-creator-media'),
+        'jr_creator_media_render_video_youtube_metabox',
+        jr_creator_media_video_post_type(),
+        'side',
+        'default'
+    );
+
+    add_meta_box(
         'jr-creator-media-social-icon',
         __('Icon', 'jr-creator-media'),
         'jr_creator_media_render_social_icon_metabox',
@@ -78,6 +87,26 @@ function jr_creator_media_render_social_url_metabox($post)
     echo '<p><label for="jrblog_social_slug"><strong>' . esc_html__('Slug', 'jr-creator-media') . '</strong></label><input class="widefat" type="text" id="jrblog_social_slug" name="jrblog_social_slug" value="' . esc_attr($slug) . '"></p>';
     echo '<p><label for="jrblog_social_url"><strong>' . esc_html__('Social Media URL', 'jr-creator-media') . '</strong></label><input class="widefat" type="text" id="jrblog_social_url" name="jrblog_social_url" value="' . esc_attr($url) . '"></p>';
     echo '<p><label for="jrblog_social_name"><strong>' . esc_html__('Social Media Username', 'jr-creator-media') . '</strong></label><input class="widefat" type="text" id="jrblog_social_name" name="jrblog_social_name" value="' . esc_attr($name) . '"></p>';
+}
+
+function jr_creator_media_render_video_youtube_metabox($post)
+{
+    $fields = array(
+        'yt_video_id'       => __('Video ID', 'jr-creator-media'),
+        'yt_broadcast_status' => __('Broadcast Status', 'jr-creator-media'),
+        'yt_view_count'     => __('Views', 'jr-creator-media'),
+        'yt_published_at'   => __('Published', 'jr-creator-media'),
+        'yt_duration'       => __('Duration', 'jr-creator-media'),
+        'yt_import_source'  => __('Import Source', 'jr-creator-media'),
+    );
+
+    echo '<table class="form-table" style="margin:0">';
+    foreach ($fields as $key => $label) {
+        $value = get_post_meta($post->ID, $key, true);
+        echo '<tr><th style="padding:4px 8px 4px 0;font-weight:600">' . esc_html($label) . '</th>';
+        echo '<td style="padding:4px 0">' . esc_html((string) $value) . '</td></tr>';
+    }
+    echo '</table>';
 }
 
 function jr_creator_media_render_social_options_metabox($post)

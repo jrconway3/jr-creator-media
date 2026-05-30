@@ -51,6 +51,12 @@ function jr_creator_media_social_defaults()
     );
 }
 
+function jr_creator_media_sanitize_count($value)
+{
+    $int = filter_var($value, FILTER_VALIDATE_INT, array('options' => array('min_range' => 0)));
+    return $int !== false ? (string) $int : '0';
+}
+
 function jr_creator_media_sanitize_string($value)
 {
     if (is_array($value) || is_object($value)) {
@@ -67,5 +73,5 @@ function jr_creator_media_sanitize_bool($value)
 
 function jr_creator_media_supported_admin_post_types()
 {
-    return array(jr_creator_media_social_post_type());
+    return array(jr_creator_media_social_post_type(), jr_creator_media_video_post_type());
 }

@@ -88,4 +88,46 @@ function jr_creator_media_register_meta()
         'sanitize_callback' => 'jr_creator_media_sanitize_bool',
         'auth_callback' => 'jr_creator_media_meta_auth_callback',
     ));
+
+    $video_type = jr_creator_media_video_post_type();
+
+    $video_string_fields = array(
+        'yt_video_id',
+        'yt_playlist_id',
+        'yt_published_at',
+        'yt_thumbnail_url',
+        'yt_duration',
+        'yt_broadcast_status',
+        'yt_scheduled_start',
+        'yt_import_source',
+    );
+    foreach ($video_string_fields as $key) {
+        register_post_meta($video_type, $key, array(
+            'single'            => true,
+            'type'              => 'string',
+            'show_in_rest'      => true,
+            'sanitize_callback' => 'jr_creator_media_sanitize_string',
+            'auth_callback'     => 'jr_creator_media_meta_auth_callback',
+        ));
+    }
+
+    // Stored as strings to avoid 32-bit integer truncation on large counts.
+    $video_count_fields = array('yt_view_count', 'yt_like_count');
+    foreach ($video_count_fields as $key) {
+        register_post_meta($video_type, $key, array(
+            'single'            => true,
+            'type'              => 'string',
+            'show_in_rest'      => true,
+            'sanitize_callback' => 'jr_creator_media_sanitize_count',
+            'auth_callback'     => 'jr_creator_media_meta_auth_callback',
+        ));
+    }
+
+    register_post_meta($video_type, 'wp_playlist_id', array(
+        'single'            => true,
+        'type'              => 'integer',
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'absint',
+        'auth_callback'     => 'jr_creator_media_meta_auth_callback',
+    ));
 }
