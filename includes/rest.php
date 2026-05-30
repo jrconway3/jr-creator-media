@@ -96,7 +96,7 @@ function jr_creator_media_rest_auth_manage()
 
 function jr_creator_media_rest_video_by_yt_id(WP_REST_Request $request)
 {
-    $yt_video_id = $request->get_param('yt_video_id');
+    $yt_video_id = $request->get_url_params()['yt_video_id'];
 
     $query = new WP_Query(array(
         'post_type'      => jr_creator_media_video_post_type(),
