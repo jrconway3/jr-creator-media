@@ -67,5 +67,5 @@ function jr_creator_media_sanitize_bool($value)
 
 function jr_creator_media_supported_admin_post_types()
 {
-    return array(jr_creator_media_social_post_type());
+    return array(jr_creator_media_social_post_type(), jr_creator_media_video_post_type());
 }
