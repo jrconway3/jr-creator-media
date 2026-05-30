@@ -27,7 +27,7 @@ function jr_creator_media_register_rest_routes()
     register_rest_route('jr/v1', '/live-stream/activate', array(
         'methods'             => WP_REST_Server::CREATABLE,
         'callback'            => 'jr_creator_media_rest_activate_live_stream',
-        'permission_callback' => 'jr_creator_media_rest_auth',
+        'permission_callback' => 'jr_creator_media_rest_auth_manage',
         'args'                => array(
             'yt_video_id' => array(
                 'required'          => true,
@@ -47,13 +47,13 @@ function jr_creator_media_register_rest_routes()
     register_rest_route('jr/v1', '/live-stream/deactivate', array(
         'methods'             => WP_REST_Server::CREATABLE,
         'callback'            => 'jr_creator_media_rest_deactivate_live_stream',
-        'permission_callback' => 'jr_creator_media_rest_auth',
+        'permission_callback' => 'jr_creator_media_rest_auth_manage',
     ));
 
     register_rest_route('jr/v1', '/channel/sync', array(
         'methods'             => WP_REST_Server::CREATABLE,
         'callback'            => 'jr_creator_media_rest_sync_channel',
-        'permission_callback' => 'jr_creator_media_rest_auth',
+        'permission_callback' => 'jr_creator_media_rest_auth_manage',
         'args'                => array(
             'handle'           => array(
                 'required'          => true,
@@ -86,6 +86,11 @@ function jr_creator_media_rest_auth()
     return current_user_can('edit_posts');
 }
 
+function jr_creator_media_rest_auth_manage()
+{
+    return current_user_can('manage_options');
+}
+
 function jr_creator_media_rest_video_by_yt_id(WP_REST_Request $request)
 {
     $yt_video_id = $request->get_param('yt_video_id');
@@ -104,10 +109,16 @@ function jr_creator_media_rest_video_by_yt_id(WP_REST_Request $request)
     ));
 
     if (empty($query->posts)) {
-        return new WP_Error('not_found', 'No video found with that YouTube ID.', array('status' => 404));
+        return new WP_Error('not_found', __('No video found with that YouTube ID.', 'jr-creator-media'), array('status' => 404));
     }
 
-    return rest_ensure_response(array('post_id' => $query->posts[0]->ID));
+    $post_id = (int) $query->posts[0]->ID;
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return new WP_Error('rest_forbidden', __('Sorry, you are not allowed to access this video.', 'jr-creator-media'), array('status' => 403));
+    }
+
+    return rest_ensure_response(array('post_id' => $post_id));
 }
 
 function jr_creator_media_rest_get_live_stream()

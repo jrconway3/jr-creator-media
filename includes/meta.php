@@ -111,14 +111,23 @@ function jr_creator_media_register_meta()
         ));
     }
 
-    $video_int_fields = array('yt_view_count', 'yt_like_count', 'wp_playlist_id');
-    foreach ($video_int_fields as $key) {
+    // Stored as strings to avoid 32-bit integer truncation on large counts.
+    $video_count_fields = array('yt_view_count', 'yt_like_count');
+    foreach ($video_count_fields as $key) {
         register_post_meta($video_type, $key, array(
             'single'            => true,
-            'type'              => 'integer',
+            'type'              => 'string',
             'show_in_rest'      => true,
-            'sanitize_callback' => 'absint',
+            'sanitize_callback' => 'jr_creator_media_sanitize_count',
             'auth_callback'     => 'jr_creator_media_meta_auth_callback',
         ));
     }
+
+    register_post_meta($video_type, 'wp_playlist_id', array(
+        'single'            => true,
+        'type'              => 'integer',
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'absint',
+        'auth_callback'     => 'jr_creator_media_meta_auth_callback',
+    ));
 }

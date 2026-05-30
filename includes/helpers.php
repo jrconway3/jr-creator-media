@@ -51,6 +51,12 @@ function jr_creator_media_social_defaults()
     );
 }
 
+function jr_creator_media_sanitize_count($value)
+{
+    $int = filter_var($value, FILTER_VALIDATE_INT, array('options' => array('min_range' => 0)));
+    return $int !== false ? (string) $int : '0';
+}
+
 function jr_creator_media_sanitize_string($value)
 {
     if (is_array($value) || is_object($value)) {
