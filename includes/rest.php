@@ -32,6 +32,9 @@ function jr_creator_media_register_rest_routes()
             'yt_video_id' => array(
                 'required'          => true,
                 'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => function ($value) {
+                    return (bool) preg_match('/^[A-Za-z0-9_-]+$/', $value);
+                },
             ),
             'title'       => array(
                 'required'          => true,
@@ -115,7 +118,7 @@ function jr_creator_media_rest_video_by_yt_id(WP_REST_Request $request)
     $post_id = (int) $query->posts[0]->ID;
 
     if (!current_user_can('edit_post', $post_id)) {
-        return new WP_Error('rest_forbidden', __('Sorry, you are not allowed to access this video.', 'jr-creator-media'), array('status' => 403));
+        return new WP_Error('not_found', __('No video found with that YouTube ID.', 'jr-creator-media'), array('status' => 404));
     }
 
     return rest_ensure_response(array('post_id' => $post_id));
@@ -125,7 +128,7 @@ function jr_creator_media_rest_get_live_stream()
 {
     $live = get_option('jr_live_stream');
 
-    if (empty($live['active'])) {
+    if (!is_array($live) || empty($live['active'])) {
         return rest_ensure_response(array('active' => false));
     }
 
@@ -175,7 +178,7 @@ function jr_creator_media_rest_deactivate_live_stream()
 
     delete_option('jr_live_stream');
 
-    if (!empty($live['yt_video_id'])) {
+    if (is_array($live) && !empty($live['yt_video_id'])) {
         $query = new WP_Query(array(
             'post_type'      => jr_creator_media_video_post_type(),
             'post_status'    => 'any',
