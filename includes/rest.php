@@ -115,6 +115,7 @@ function jr_creator_media_rest_video_by_yt_id(WP_REST_Request $request)
         'post_status'    => 'any',
         'posts_per_page' => 1,
         'no_found_rows'  => true,
+        'fields'         => 'ids',
         'meta_query'     => array(
             array(
                 'key'   => 'yt_video_id',
@@ -127,7 +128,7 @@ function jr_creator_media_rest_video_by_yt_id(WP_REST_Request $request)
         return new WP_Error('not_found', __('No video found with that YouTube ID.', 'jr-creator-media'), array('status' => 404));
     }
 
-    $post_id = (int) $query->posts[0]->ID;
+    $post_id = (int) $query->posts[0];
 
     if (!current_user_can('edit_post', $post_id)) {
         return new WP_Error('not_found', __('No video found with that YouTube ID.', 'jr-creator-media'), array('status' => 404));
@@ -169,6 +170,7 @@ function jr_creator_media_rest_activate_live_stream(WP_REST_Request $request)
         'post_status'    => 'any',
         'posts_per_page' => 1,
         'no_found_rows'  => true,
+        'fields'         => 'ids',
         'meta_query'     => array(
             array(
                 'key'   => 'yt_video_id',
@@ -178,7 +180,7 @@ function jr_creator_media_rest_activate_live_stream(WP_REST_Request $request)
     ));
 
     if (!empty($query->posts)) {
-        update_post_meta($query->posts[0]->ID, 'yt_broadcast_status', 'live');
+        update_post_meta($query->posts[0], 'yt_broadcast_status', 'live');
     }
 
     return rest_ensure_response(array('success' => true));
@@ -196,6 +198,7 @@ function jr_creator_media_rest_deactivate_live_stream()
             'post_status'    => 'any',
             'posts_per_page' => 1,
             'no_found_rows'  => true,
+            'fields'         => 'ids',
             'meta_query'     => array(
                 array(
                     'key'   => 'yt_video_id',
@@ -205,7 +208,7 @@ function jr_creator_media_rest_deactivate_live_stream()
         ));
 
         if (!empty($query->posts)) {
-            update_post_meta($query->posts[0]->ID, 'yt_broadcast_status', 'none');
+            update_post_meta($query->posts[0], 'yt_broadcast_status', 'none');
         }
     }
 
@@ -221,6 +224,7 @@ function jr_creator_media_rest_playlist_by_yt_id(WP_REST_Request $request)
         'post_status'    => 'any',
         'posts_per_page' => 1,
         'no_found_rows'  => true,
+        'fields'         => 'ids',
         'meta_query'     => array(
             array(
                 'key'   => 'yt_playlist_id',
@@ -233,7 +237,7 @@ function jr_creator_media_rest_playlist_by_yt_id(WP_REST_Request $request)
         return new WP_Error('not_found', __('No playlist found with that YouTube ID.', 'jr-creator-media'), array('status' => 404));
     }
 
-    $post_id = (int) $query->posts[0]->ID;
+    $post_id = (int) $query->posts[0];
 
     if (!current_user_can('edit_post', $post_id)) {
         return new WP_Error('not_found', __('No playlist found with that YouTube ID.', 'jr-creator-media'), array('status' => 404));
