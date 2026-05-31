@@ -217,7 +217,7 @@ function jr_creator_media_rest_playlist_by_yt_id(WP_REST_Request $request)
     $yt_playlist_id = $request->get_url_params()['yt_playlist_id'];
 
     $query = new WP_Query(array(
-        'post_type'      => 'playlist',
+        'post_type'      => jr_creator_media_playlist_post_type(),
         'post_status'    => 'any',
         'posts_per_page' => 1,
         'no_found_rows'  => true,

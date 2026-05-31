@@ -14,6 +14,11 @@ function jr_creator_media_video_post_type()
     return 'video';
 }
 
+function jr_creator_media_playlist_post_type()
+{
+    return 'playlist';
+}
+
 function jr_creator_media_social_defaults()
 {
     return array(
