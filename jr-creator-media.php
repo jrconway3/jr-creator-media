@@ -27,8 +27,6 @@ if (!jr_creator_media_is_core_plugin_active()) {
 }
 
 require_once JR_CREATOR_MEDIA_PATH . 'includes/helpers.php';
-require_once JR_CREATOR_MEDIA_PATH . 'includes/post-types.php';
-require_once JR_CREATOR_MEDIA_PATH . 'includes/meta.php';
 require_once JR_CREATOR_MEDIA_PATH . 'includes/migrations.php';
 
 function jr_creator_media_load()
