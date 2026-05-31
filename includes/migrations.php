@@ -6,8 +6,6 @@ if (!defined('ABSPATH')) {
 
 function jr_creator_media_activate()
 {
-    jr_creator_media_register_post_types();
-    jr_creator_media_register_meta();
     jr_creator_media_seed_default_social_profiles();
 
     update_option('jr_creator_media_version', JR_CREATOR_MEDIA_VERSION);
