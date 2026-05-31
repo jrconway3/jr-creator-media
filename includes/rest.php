@@ -70,6 +70,10 @@ function jr_creator_media_register_rest_routes()
         'callback'            => 'jr_creator_media_rest_sync_channel',
         'permission_callback' => 'jr_creator_media_rest_auth_manage',
         'args'                => array(
+            'name'             => array(
+                'required'          => true,
+                'sanitize_callback' => 'sanitize_text_field',
+            ),
             'handle'           => array(
                 'required'          => true,
                 'sanitize_callback' => 'sanitize_text_field',
@@ -248,6 +252,7 @@ function jr_creator_media_rest_playlist_by_yt_id(WP_REST_Request $request)
 
 function jr_creator_media_rest_sync_channel(WP_REST_Request $request)
 {
+    update_option('jr_yt_channel_name', $request->get_param('name'), false);
     update_option('jr_yt_channel_handle', $request->get_param('handle'), false);
     update_option('jr_yt_channel_url', $request->get_param('url'), false);
     update_option('jr_yt_subscriber_count', $request->get_param('subscriber_count'), false);
@@ -259,6 +264,7 @@ function jr_creator_media_rest_sync_channel(WP_REST_Request $request)
 function jr_creator_media_rest_get_channel()
 {
     return rest_ensure_response(array(
+        'name'             => get_option('jr_yt_channel_name', ''),
         'handle'           => get_option('jr_yt_channel_handle', ''),
         'url'              => get_option('jr_yt_channel_url', ''),
         'subscriber_count' => (int) get_option('jr_yt_subscriber_count', 0),
